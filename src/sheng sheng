@@ -24,18 +24,12 @@ const Status QU_Insert(const string & relation,
 	status = relCat->getInfo(relation, rd);
 	if (status != OK) return status;
 
-	int cnt;
-	status = attrCat->getRelInfo(rd.relName, cnt, attrs);
-	if (status != OK) return status;
-
-	/*
 	for(int i = 0; i < attrCnt; i++)
 	{
 		string attName(attrList[i].attrName);
-		status = attrCat->getInfo(relation,attName, attrs);
+		status = attrCat->getInfo(relation,attName, *attrs);
 		if (status != OK) return status;
 	}
-	*/
 
 	for(int i = 0; i < attrCnt; i++)
 	{
@@ -80,11 +74,11 @@ const Status QU_Insert(const string & relation,
 	rec.length = length;
 	rec.data = &outData;
 
-	InsertFileScan * ifs = new InsertFileScan(relation, status);
+	InsertFileScan ifs = new InsertFileScan(relation, status);
 	if (status != OK) return status;
 
 	RID outRid;
-	status = ifs->insertRecord(rec, outRid);
+	status = ifs.insertRecord(rec, outRid);
 	if (status != OK) return status;
 
 	delete ifs;
